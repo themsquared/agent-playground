@@ -1,0 +1,29 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = {extras = ["async"], version = "*"}
+flask-cors = "*"
+hypercorn = "*"
+python-dotenv = "*"
+pydantic = "*"
+aiohttp = "*"
+openai = "*"
+anthropic = "*"
+ollama = "*"
+asyncio = "*"
+typing-extensions = "*"
+psycopg2-binary = "*"
+psycopg2 = "*"
+
+[dev-packages]
+pytest = "*"
+black = "*"
+isort = "*"
+mypy = "*"
+pytest-asyncio = "*"
+
+[requires]
+python_version = "3.11"

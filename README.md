@@ -1,4 +1,4 @@
-# LLM Playground
+# LLM Agent Playground
 
 A full-stack application for evaluating and comparing different Language Model providers (OpenAI, Anthropic, Ollama) through a unified interface. Features include interactive chat, model evaluation, cost tracking, and performance analysis.
 
@@ -14,6 +14,106 @@ A full-stack application for evaluating and comparing different Language Model p
 - 🎯 Action system for structured outputs
 - 🌡️ Weather integration demo
 - 🌓 Dark/Light theme support
+
+## Creating Custom Actions
+
+Actions are capabilities that can be executed by the LLMs. Each action is a Python class that inherits from `BaseAction` and implements specific functionality.
+
+1. **Create a New Action File**
+   ```bash
+   # In Playground/actions/actions_list/
+   touch my_custom_action.py
+   ```
+
+2. **Implement the Action Class**
+   ```python
+   from typing import Dict, Any
+   from ..base import BaseAction, ActionResult, ActionExample
+
+   class MyCustomAction(BaseAction):
+       """Description of what your action does"""
+       name = "my_custom_action"  # Unique identifier
+       description = "Human-readable description"
+       required_parameters = {
+           "param1": "Description of first parameter",
+           "param2": "Description of second parameter"
+       }
+       examples = [
+           ActionExample(
+               query="Example user query",
+               response={
+                   "actions": [{
+                       "name": "my_custom_action",
+                       "parameters": {
+                           "param1": "example_value",
+                           "param2": "example_value"
+                       }
+                   }]
+               },
+               description="Description of this example"
+           )
+       ]
+
+       async def execute(self, parameters: Dict[str, Any]) -> ActionResult:
+           """Execute the action with the given parameters"""
+           try:
+               # Your action implementation here
+               result = "Action result"
+               
+               return ActionResult(
+                   success=True,
+                   message=f"Action completed: {result}",
+                   data={
+                       "result": result,
+                       # Additional data as needed
+                   }
+               )
+           except Exception as e:
+               return ActionResult(
+                   success=False,
+                   message="Action failed",
+                   error=str(e)
+               )
+   ```
+
+3. **Action Requirements**
+   - Must inherit from `BaseAction`
+   - Define required class attributes:
+     - `name`: Unique identifier for the action
+     - `description`: Human-readable description
+     - `required_parameters`: Dictionary of parameters and descriptions
+     - `examples`: List of `ActionExample` objects showing usage
+   - Implement the `execute` method
+
+4. **Best Practices**
+   - Validate all parameters before processing
+   - Include comprehensive error handling
+   - Add debug logging for easier troubleshooting
+   - Document any external dependencies or API keys needed
+   - Include multiple examples showing different use cases
+
+5. **Auto-Registration**
+   - Actions are automatically discovered and registered
+   - No manual registration required
+   - Just place the file in `Playground/actions/actions_list/`
+   - File name must end with `_action.py`
+
+6. **Example Usage in LLM Prompt**
+   ```json
+   {
+     "actions": [{
+       "name": "my_custom_action",
+       "parameters": {
+         "param1": "value1",
+         "param2": "value2"
+       }
+     }]
+   }
+   ```
+
+See existing actions in `Playground/actions/actions_list/` for more examples:
+- `weather_action.py`: Gets weather information
+- `greeting_action.py`: Generates multilingual greetings
 
 ## Prerequisites
 
